@@ -8,7 +8,7 @@ import EmptyState from "@/components/ui/EmptyState";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
 import { getInitials, getClientStatus } from "@/lib/utils/formatters";
 
-export default function ClientGrid({ clients, onEdit, onDelete, deleting }) {
+export default function ClientGrid({ clients = [], onEdit, onDelete, deleting }) {
   const router = useRouter();
   const [confirmId, setConfirmId] = useState(null);
 
@@ -32,67 +32,73 @@ export default function ClientGrid({ clients, onEdit, onDelete, deleting }) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {clients.map((client) => {
           const status = getClientStatus(client.projects);
+          const isActive = status === "active";
+          
           return (
             <div
               key={client.id}
               onClick={() => router.push(`/dashboard/clients/${client.id}`)}
-              className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-xl p-5 cursor-pointer hover:border-[#3a3a3a] transition-colors flex flex-col gap-4"
+              className="bg-stone-900/30 border border-stone-900/80 rounded-xl p-5 cursor-pointer hover:border-stone-800 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-black/40 transition-all duration-300 flex flex-col gap-4 group"
             >
-              {/* Top — avatar + badge */}
+              {/* Client avatar and status */}
               <div className="flex items-start justify-between">
-                <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-sm font-semibold text-indigo-400">
+                <div className="w-10 h-10 rounded-xl bg-stone-900/60 border border-stone-800/80 flex items-center justify-center text-sm font-bold text-stone-200 transition-colors group-hover:border-amber-500/20 group-hover:text-amber-500">
                   {getInitials(client.name)}
                 </div>
                 <Badge
-                  label={status === "active" ? "Active" : "Inactive"}
-                  variant={status}
+                  label={isActive ? "Active" : "Inactive"}
+                  variant={isActive ? "active" : "inactive"}
                 />
               </div>
 
-              {/* Name */}
+              {/* Client ID header */}
               <div>
-                <p className="text-sm font-semibold text-[#e8e8e8]">{client.name}</p>
+                <p className="text-sm font-semibold text-stone-200 group-hover:text-amber-500 transition-colors duration-200">
+                  {client.name}
+                </p>
                 {client.notes && (
-                  <p className="text-xs text-[#555] mt-0.5 line-clamp-2">{client.notes}</p>
+                  <p className="text-xs text-stone-500 mt-1 line-clamp-2 leading-relaxed">
+                    {client.notes}
+                  </p>
                 )}
               </div>
 
-              {/* Details */}
-              <div className="flex flex-col gap-1.5">
+              {/* Contact info */}
+              <div className="flex flex-col gap-2 mt-auto">
                 {client.email && (
-                  <div className="flex items-center gap-2 text-xs text-[#555]">
-                    <Mail size={12} />
+                  <div className="flex items-center gap-2.5 text-xs text-stone-400">
+                    <Mail size={13} className="text-stone-600 flex-shrink-0" />
                     <span className="truncate">{client.email}</span>
                   </div>
                 )}
                 {client.phone && (
-                  <div className="flex items-center gap-2 text-xs text-[#555]">
-                    <Phone size={12} />
+                  <div className="flex items-center gap-2.5 text-xs text-stone-400">
+                    <Phone size={13} className="text-stone-600 flex-shrink-0" />
                     <span>{client.phone}</span>
                   </div>
                 )}
                 {client.address && (
-                  <div className="flex items-center gap-2 text-xs text-[#555]">
-                    <MapPin size={12} />
+                  <div className="flex items-center gap-2.5 text-xs text-stone-400">
+                    <MapPin size={13} className="text-stone-600 flex-shrink-0" />
                     <span className="truncate">{client.address}</span>
                   </div>
                 )}
               </div>
 
-              {/* Actions */}
+              {/* Action buttons */}
               <div
-                className="flex gap-4 pt-2 border-t border-[#2a2a2a]"
+                className="flex gap-2 pt-3 border-t border-stone-900/80 mt-1"
                 onClick={(e) => e.stopPropagation()}
               >
                 <button
                   onClick={() => onEdit(client)}
-                  className="text-xs text-[#555] hover:text-indigo-400 transition-colors"
+                  className="flex-1 py-1.5 rounded-lg border border-stone-900 bg-stone-950/40 text-xs font-medium text-stone-400 hover:text-stone-200 hover:bg-stone-900/40 transition-all duration-200"
                 >
                   Edit
                 </button>
                 <button
                   onClick={() => setConfirmId(client.id)}
-                  className="text-xs text-[#555] hover:text-red-400 transition-colors"
+                  className="flex-1 py-1.5 rounded-lg border border-transparent text-xs font-medium text-stone-500 hover:text-red-400 hover:bg-red-500/5 transition-all duration-200"
                 >
                   Delete
                 </button>
