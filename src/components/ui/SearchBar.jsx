@@ -1,6 +1,10 @@
 import { Search } from "lucide-react";
 
-export default function SearchBar({ value, onChange, placeholder = "Search..." }) {
+export default function SearchBar({
+  value,
+  onChange,
+  placeholder = "Search...",
+}) {
   return (
     <div className="relative flex-1">
       <Search

@@ -17,12 +17,12 @@ import {
 } from "lucide-react";
 
 const navLinks = [
-  { href: "/dashboard",           label: "Dashboard", icon: LayoutDashboard },
-  { href: "/dashboard/clients",   label: "Clients",   icon: Users },
-  { href: "/dashboard/projects",  label: "Projects",  icon: FolderKanban },
-  { href: "/dashboard/tasks",     label: "Tasks",     icon: CheckSquare },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard/clients", label: "Clients", icon: Users },
+  { href: "/dashboard/projects", label: "Projects", icon: FolderKanban },
+  { href: "/dashboard/tasks", label: "Tasks", icon: CheckSquare },
   { href: "/dashboard/analytics", label: "Analytics", icon: BarChart2 },
-  { href: "/dashboard/settings",  label: "Settings",  icon: Settings },
+  { href: "/dashboard/settings", label: "Settings", icon: Settings },
 ];
 
 export default function Topbar() {
@@ -71,9 +71,10 @@ export default function Topbar() {
                   href={href}
                   onClick={() => setMenuOpen(false)}
                   className={`flex items-center gap-3 px-4 py-3 rounded-lg text-[15px] font-medium transition-all duration-150
-                    ${isActive
-                      ? "text-[#e8e8e8] bg-[#1f1f1f] border-l-2 border-indigo-500 pl-[14px]"
-                      : "text-[#888] hover:text-[#e8e8e8] hover:bg-[#1f1f1f] border-l-2 border-transparent"
+                    ${
+                      isActive
+                        ? "text-[#e8e8e8] bg-[#1f1f1f] border-l-2 border-indigo-500 pl-[14px]"
+                        : "text-[#888] hover:text-[#e8e8e8] hover:bg-[#1f1f1f] border-l-2 border-transparent"
                     }`}
                 >
                   <Icon size={18} strokeWidth={1.8} />

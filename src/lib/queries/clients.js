@@ -1,15 +1,21 @@
 import { createClient } from "@/lib/supabase/client";
 
 // ─── GET ALL CLIENTS ──────────────────────────────────────────
-// Returns all clients belonging to the logged-in freelancer,
-// newest first. RLS handles the user_id filter automatically.
+// Fetches clients with their projects so we can compute
+// active/inactive status on the frontend.
 
 export async function getClients() {
   const supabase = createClient();
 
   const { data, error } = await supabase
     .from("clients")
-    .select("*")
+    .select(`
+      *,
+      projects (
+        id,
+        status
+      )
+    `)
     .order("created_at", { ascending: false });
 
   if (error) throw error;
@@ -17,9 +23,6 @@ export async function getClients() {
 }
 
 // ─── GET SINGLE CLIENT ────────────────────────────────────────
-// Returns one client by ID, including all their linked projects.
-// Useful for the client detail page (/clients/[id]).
-
 export async function getClientById(id) {
   const supabase = createClient();
 
@@ -36,16 +39,13 @@ export async function getClientById(id) {
       )
     `)
     .eq("id", id)
-    .single(); // returns one object instead of an array
+    .single();
 
   if (error) throw error;
   return data;
 }
 
 // ─── CREATE CLIENT ────────────────────────────────────────────
-// Inserts a new client row. user_id is pulled from the active
-// session so the freelancer can't spoof ownership.
-
 export async function createClient_(clientData) {
   const supabase = createClient();
 
@@ -62,9 +62,6 @@ export async function createClient_(clientData) {
 }
 
 // ─── UPDATE CLIENT ────────────────────────────────────────────
-// Updates specific fields on an existing client.
-// Pass only the fields you want to change.
-
 export async function updateClient(id, updates) {
   const supabase = createClient();
 
@@ -80,9 +77,6 @@ export async function updateClient(id, updates) {
 }
 
 // ─── DELETE CLIENT ────────────────────────────────────────────
-// Deletes a client. Their linked projects will have client_id
-// set to NULL (ON DELETE SET NULL) — projects are not deleted.
-
 export async function deleteClient(id) {
   const supabase = createClient();
 

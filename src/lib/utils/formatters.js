@@ -1,4 +1,9 @@
-// ─── PRIORITY CALCULATOR ─────────────────────────────────────────────
+// ─── PRIORITY ─────────────────────────────────────────────────
+// Computes project priority from due_date.
+// Called in useProjects — never stored in the DB.
+//
+// Returns: "urgent" | "high" | "medium" | "low" | "none"
+
 export function getPriority(dueDate) {
   if (!dueDate) return "none";
 
@@ -14,7 +19,7 @@ export function getPriority(dueDate) {
   return "low";
 }
 
-// Priority badge colors
+// Priority badge colors — use in your components
 export const priorityStyles = {
   overdue: "bg-red-100 text-red-700",
   urgent:  "bg-orange-100 text-orange-700",
@@ -24,7 +29,10 @@ export const priorityStyles = {
   none:    "bg-gray-100 text-gray-500",
 };
 
-// ─── DATE FORMATTER ─────────────────────────────────────────────
+// ─── DATE ─────────────────────────────────────────────────────
+// Formats a date string into a readable format.
+// e.g. "2025-06-21" → "Jun 21, 2025"
+
 export function formatDate(dateStr) {
   if (!dateStr) return "—";
   return new Date(dateStr).toLocaleDateString("en-US", {
@@ -34,8 +42,11 @@ export function formatDate(dateStr) {
   });
 }
 
+// ─── CURRENCY ─────────────────────────────────────────────────
+// Formats a number as currency.
+// e.g. 450000 → "₦450,000.00"
+// Change the locale and currency to match your preference.
 
-// ─── CURRENCY FORMATTER ─────────────────────────────────────────
 export function formatCurrency(amount) {
   if (amount === null || amount === undefined) return "—";
   return new Intl.NumberFormat("en-NG", {
@@ -44,14 +55,20 @@ export function formatCurrency(amount) {
   }).format(amount);
 }
 
-// ─── MONTH NAME FORMATTER ───────────────────────────────────────
+// ─── MONTH NAME ───────────────────────────────────────────────
+// Converts a month number to its name.
+// e.g. 6 → "June"
+
 export function getMonthName(month) {
   return new Date(2000, month - 1, 1).toLocaleDateString("en-US", {
     month: "long",
   });
 }
 
-// ─── INITIALS GENERATOR ─────────────────────────────────────────
+// ─── INITIALS ─────────────────────────────────────────────────
+// Gets initials from a full name for avatar placeholders.
+// e.g. "John Doe" → "JD"
+
 export function getInitials(name) {
   if (!name) return "?";
   return name
@@ -60,4 +77,15 @@ export function getInitials(name) {
     .join("")
     .toUpperCase()
     .slice(0, 2);
+}
+
+// ─── CLIENT STATUS ────────────────────────────────────────────
+// Derives active/inactive from whether the client has any
+// projects with status "active". No DB column needed.
+//
+// e.g. getClientStatus(client.projects) → "active" | "inactive"
+
+export function getClientStatus(projects = []) {
+  const hasActiveProject = projects.some((p) => p.status === "active");
+  return hasActiveProject ? "active" : "inactive";
 }
