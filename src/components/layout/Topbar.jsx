@@ -40,61 +40,80 @@ export default function Topbar() {
   return (
     <>
       {/* Topbar */}
-      <header className="flex items-center justify-between px-5 h-14 bg-[#141414] border-b border-[#2a2a2a] sticky top-0 z-40">
+      <header className="flex items-center justify-between px-5 h-14 bg-stone-950 border-b border-stone-800/60 sticky top-0 z-50">
         <div className="flex items-center gap-2.5">
-          <span className="w-7 h-7 bg-indigo-500 rounded-lg flex items-center justify-center text-[11px] font-bold text-white">
+          <span className="w-7 h-7 bg-amber-500/10 border border-amber-500/30 rounded-md flex items-center justify-center text-[10px] font-bold text-amber-500 tracking-wider">
             FD
           </span>
-          <span className="text-sm font-semibold text-[#f0f0f0] tracking-tight">
+          <span className="text-sm font-semibold text-stone-200 tracking-tight">
             FreelancerDesk
           </span>
         </div>
 
+        {/* Menu toggle button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="text-[#888] hover:text-[#e8e8e8] transition-colors p-1"
+          className="text-stone-400 hover:text-stone-200 transition-all duration-300 p-1 rounded-md hover:bg-stone-900"
           aria-label="Toggle menu"
         >
-          {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          <div className={`transition-transform duration-300 ${menuOpen ? "rotate-90" : "rotate-0"}`}>
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
+          </div>
         </button>
       </header>
 
       {/* Mobile nav overlay */}
-      {menuOpen && (
-        <div className="fixed top-14 left-0 right-0 bottom-0 bg-[#141414] z-39 flex flex-col p-3 border-t border-[#2a2a2a]">
-          <nav className="flex-1 flex flex-col gap-0.5">
-            {navLinks.map(({ href, label, icon: Icon }) => {
-              const isActive = pathname === href;
-              return (
-                <Link
-                  key={href}
-                  href={href}
-                  onClick={() => setMenuOpen(false)}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-lg text-[15px] font-medium transition-all duration-150
-                    ${
-                      isActive
-                        ? "text-[#e8e8e8] bg-[#1f1f1f] border-l-2 border-indigo-500 pl-[14px]"
-                        : "text-[#888] hover:text-[#e8e8e8] hover:bg-[#1f1f1f] border-l-2 border-transparent"
-                    }`}
-                >
-                  <Icon size={18} strokeWidth={1.8} />
-                  <span>{label}</span>
-                </Link>
-              );
-            })}
-          </nav>
+      <div
+        className={`fixed inset-x-0 bottom-0 top-14 bg-stone-950/95 backdrop-blur-md z-40 flex flex-col p-4 border-t border-stone-900 transition-all duration-300 ease-out
+          ${menuOpen 
+            ? "opacity-100 translate-y-0 pointer-events-auto" 
+            : "opacity-0 -translate-y-4 pointer-events-none"
+          }`}
+      >
+        <nav className="flex-1 flex flex-col gap-1">
+          {navLinks.map(({ href, label, icon: Icon }, index) => {
+            const isActive = pathname === href;
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                style={{
+                  transitionDelay: menuOpen ? `${index * 40}ms` : "0ms",
+                }}
+                className={`flex items-center gap-3.5 px-4 py-3 rounded-xl text-[14px] font-medium transition-all duration-200 group
+                  ${menuOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"}
+                  ${
+                    isActive
+                      ? "text-stone-100 bg-stone-900/80 border-l border-amber-500 font-semibold"
+                      : "text-stone-400 hover:text-stone-200 hover:bg-stone-900/40 border-l border-transparent"
+                  }`}
+              >
+                <Icon 
+                  size={18} 
+                  strokeWidth={2} 
+                  className={`transition-colors duration-200 ${isActive ? "text-amber-500" : "text-stone-500 group-hover:text-stone-300"}`} 
+                />
+                <span>{label}</span>
+              </Link>
+            );
+          })}
+        </nav>
 
-          <div className="pt-3 border-t border-[#2a2a2a]">
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-3 px-4 py-3 rounded-lg text-[15px] font-medium text-[#888] hover:text-red-400 hover:bg-[#1f1f1f] transition-all duration-150 w-full text-left border-l-2 border-transparent"
-            >
-              <LogOut size={18} strokeWidth={1.8} />
-              <span>Log out</span>
-            </button>
-          </div>
+        {/* Logout Section */}
+        <div 
+          className={`pt-4 border-t border-stone-900/60 transition-all duration-300 delay-200
+            ${menuOpen ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"}`}
+        >
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-3.5 px-4 py-3 rounded-xl text-[14px] font-medium text-stone-400 hover:text-red-400 hover:bg-red-500/5 transition-all duration-200 w-full text-left"
+          >
+            <LogOut size={18} strokeWidth={2} className="text-stone-500 group-hover:text-red-400" />
+            <span>Log out</span>
+          </button>
         </div>
-      )}
+      </div>
     </>
   );
 }
