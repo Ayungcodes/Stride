@@ -1,36 +1,179 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FreelancerDesk
+
+A full-stack freelancer management dashboard built with Next.js and Supabase. Manage clients, projects, tasks, and track your earnings — all in one place.
+
+![FreelancerDesk Dashboard](https://knmvcfrdcooyzffvponx.supabase.co/storage/v1/object/public/assets/dashboard-preview.png)
+
+---
+
+## Features
+
+- **Authentication** — Signup, login, logout, forgot/reset password via Supabase Auth
+- **Clients** — Add and manage clients with contact info, notes, and active/inactive status derived from linked projects
+- **Projects** — Track projects with start/due dates, status, and priority auto-computed from due date
+- **Tasks** — Manage tasks standalone or linked to a project, with kanban-style statuses
+- **Earnings** — Log income entries and visualize monthly revenue with an area chart
+- **Analytics** — Year/month breakdown, growth tracking vs previous month, best month stats
+- **Dashboard overview** — At-a-glance stats, upcoming deadlines, pending tasks, revenue chart
+- **Settings** — Update profile name and password
+- **Responsive** — Sidebar on desktop, top nav on mobile
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|-------|-----------|
+| Framework | Next.js 16 (App Router) |
+| Database | Supabase (PostgreSQL) |
+| Auth | Supabase Auth |
+| Styling | Tailwind CSS v4 |
+| Charts | Recharts |
+| Icons | Lucide React |
+| Deployment | Vercel |
+
+---
+
+## Project Structure
+
+```
+freelancers-dashboard-app/
+├── supabase/
+│   ├── migrations/          # SQL migration files
+│   │   ├── 001_init_profiles.sql
+│   │   ├── 002_init_clients.sql
+│   │   ├── 003_init_projects.sql
+│   │   ├── 004_init_tasks.sql
+│   │   └── 005_init_earnings.sql
+│   └── seed.sql             # Dev seed data
+├── middleware.js             # Auth route protection
+└── src/
+    ├── app/
+    │   ├── (auth)/           # Login, signup, forgot/reset password
+    │   └── (dashboard)/
+    │       └── dashboard/    # Protected routes
+    │           ├── page.jsx          # Overview
+    │           ├── clients/
+    │           ├── projects/
+    │           ├── tasks/
+    │           ├── analytics/
+    │           └── settings/
+    ├── components/
+    │   ├── layout/           # Sidebar, Topbar, DashboardLayout
+    │   ├── ui/               # StatCard, Badge, Drawer, SearchBar, Skeleton...
+    │   ├── clients/          # ClientList, ClientGrid, ClientForm
+    │   ├── projects/         # ProjectList, ProjectGrid, ProjectForm
+    │   └── tasks/            # TaskList, TaskForm
+    └── lib/
+        ├── supabase/         # Browser and server clients
+        ├── queries/          # DB queries per entity
+        ├── hooks/            # React hooks wrapping queries
+        └── utils/            # formatters, validators
+```
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js v22+
+- A [Supabase](https://supabase.com) account
+
+### 1. Clone the repository
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/Ayungcodes/FreelancerDesk.git
+cd freelancers-dashboard-app
+```
+### 2. Install dependencies
+
+```bash
+cd src
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 3. Set up Supabase
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+Create a new Supabase project, then go to **SQL Editor** and run each migration file in order:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+supabase/migrations/001_init_profiles.sql
+supabase/migrations/002_init_clients.sql
+supabase/migrations/003_init_projects.sql
+supabase/migrations/004_init_tasks.sql
+supabase/migrations/005_init_earnings.sql
+```
 
-## Learn More
+### 4. Configure environment variables
 
-To learn more about Next.js, take a look at the following resources:
+Create a `.env` file inside the `src/` folder:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Get both values from **Supabase dashboard → Project Settings → API**.
 
-## Deploy on Vercel
+> ⚠️ Use the **anon/public** key — never the service role key.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 5. Run the dev server
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+cd src
+npm run dev
+```
+
+Visit `http://localhost:3000` — you'll be redirected to `/login`.
+
+---
+
+## Database Schema
+
+```
+profiles        — extends auth.users (auto-created on signup via trigger)
+clients         — freelancer's clients, linked to user
+projects        — linked to a client and user, with status and due date
+tasks           — linked to a project (optional) and user
+earnings        — income entries linked to user, used for analytics
+monthly_earnings — view that groups earnings by month/year per user
+```
+
+All tables have **Row Level Security (RLS)** enabled — users can only read and write their own data.
+
+---
+
+## Seed Data
+
+To populate your account with test data:
+
+1. Sign up in the app first
+2. Run this in Supabase SQL Editor to get your user ID:
+   ```sql
+   SELECT id FROM auth.users LIMIT 1;
+   ```
+3. Replace `00000000-0000-0000-0000-000000000000` in `supabase/seed.sql` with your ID
+4. Paste the entire seed file into SQL Editor and run it
+
+---
+
+## Deployment
+
+This app is deployed on Vercel. See the [deployment guide](#deploying-to-vercel) below.
+
+### Deploying to Vercel
+
+1. Push your code to GitHub
+2. Import the repo on [vercel.com](https://vercel.com)
+3. Set the **Root Directory** to `src`
+4. Add environment variables:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+5. Deploy
+
+---
+
+## License
+
+MIT
