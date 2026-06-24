@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Users, MoreHorizontal, Edit2, Trash2 } from "lucide-react";
+import { Users, Edit2, Trash2 } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import EmptyState from "@/components/ui/EmptyState";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
-import { getInitials, getClientStatus } from "@/lib/utils/formatters";
+import { getInitials } from "@/lib/utils/formatters";
 
 export default function ClientList({
   clients = [],
@@ -36,8 +36,9 @@ export default function ClientList({
     <>
       <div className="flex flex-col bg-stone-900/10 border border-stone-900/80 rounded-xl overflow-hidden backdrop-blur-sm">
         {clients.map((client, index) => {
-          const status = getClientStatus(client.projects);
-          const isActive = status === "active";
+          const isActive = client.status
+            ? String(client.status).trim().toLowerCase() === "active"
+            : false;
 
           return (
             <div

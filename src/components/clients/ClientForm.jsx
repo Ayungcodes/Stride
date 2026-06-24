@@ -23,7 +23,8 @@ export default function ClientForm({ initial, onSubmit, loading }) {
         phone: initial.phone || "",
         address: initial.address || "",
         notes: initial.notes || "",
-        status: initial.status || "active",
+        // Look for explicit status first, handle strings safely
+        status: initial.status ? String(initial.status).toLowerCase() : "active",
       });
     } else {
       setForm(emptyForm);
@@ -99,7 +100,7 @@ export default function ClientForm({ initial, onSubmit, loading }) {
         />
       </div>
 
-      {/* Status*/}
+      {/* Status Toggle Box */}
       <div className="flex flex-col gap-2">
         <label className="text-xs font-medium text-stone-400">Status</label>
         <div className="relative flex p-1 bg-stone-950 rounded-xl border border-stone-900 overflow-hidden h-11 items-center">
@@ -114,22 +115,22 @@ export default function ClientForm({ initial, onSubmit, loading }) {
           <button
             type="button"
             onClick={() => setStatusValue("active")}
-            className={`flex-1 flex items-center justify-center gap-2 text-xs font-medium z-10 h-full transition-colors duration-200
+            className={`flex-1 flex items-center justify-center gap-2 text-xs font-medium z-10 h-full transition-colors duration-200 focus:outline-none
               ${form.status === "active" ? "text-amber-500 font-semibold" : "text-stone-500 hover:text-stone-300"}`}
           >
             <span className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${form.status === "active" ? "bg-amber-500 shadow-sm shadow-amber-500 animate-pulse" : "bg-stone-700"}`} />
-            Active
+            <span>Active</span>
           </button>
 
           {/* Inactive Option Button */}
           <button
             type="button"
             onClick={() => setStatusValue("inactive")}
-            className={`flex-1 flex items-center justify-center gap-2 text-xs font-medium z-10 h-full transition-colors duration-200
+            className={`flex-1 flex items-center justify-center gap-2 text-xs font-medium z-10 h-full transition-colors duration-200 focus:outline-none
               ${form.status === "inactive" ? "text-stone-300 font-semibold" : "text-stone-500 hover:text-stone-300"}`}
           >
             <span className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${form.status === "inactive" ? "bg-stone-400" : "bg-stone-700"}`} />
-            Inactive
+            <span>Inactive</span>
           </button>
         </div>
       </div>
@@ -156,7 +157,7 @@ export default function ClientForm({ initial, onSubmit, loading }) {
         {loading ? (
           <>
             <Loader2 size={16} className="animate-spin" />
-            <span>Saving...</span>
+            <span>Saving parameters...</span>
           </>
         ) : (
           <span>{initial ? "Save changes" : "Add client"}</span>

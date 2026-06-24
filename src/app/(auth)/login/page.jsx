@@ -47,7 +47,7 @@ export default function LoginPage() {
         
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-stone-950 border border-stone-800 mb-4 shadow-inner">
-            <span className="text-xs font-black text-amber-500 tracking-widest">S</span>
+            <span className="text-xs font-black text-amber-500 tracking-widest">FD</span>
           </div>
           <h1 className="text-2xl font-bold text-stone-100 tracking-tight">
             Welcome back
@@ -129,7 +129,7 @@ export default function LoginPage() {
               </>
             ) : (
               <>
-                <span>Establish Session</span>
+                <span>Login</span>
                 <ArrowRight size={14} strokeWidth={2.5} />
               </>
             )}

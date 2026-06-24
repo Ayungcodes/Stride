@@ -209,7 +209,7 @@ export default function AnalyticsPage() {
         </div>
         <button
           onClick={handleAdd}
-          className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-white text-sm font-medium rounded-lg transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 bg-amber-500 hover:bg-amber-400 text-stone-950 shadow-amber-500/5 text-sm font-medium rounded-lg transition-colors"
         >
           <Plus size={16} />
           Log earning
@@ -224,8 +224,8 @@ export default function AnalyticsPage() {
             onClick={() => setSelectedYear(year)}
             className={`px-4 py-1.5 rounded-lg text-sm font-medium transition-colors
               ${selectedYear === year
-                ? "bg-amber-500 text-white"
-                : "bg-[#1a1a1a] border border-[#2a2a2a] text-[#888] hover:text-[#e8e8e8]"
+                ? "bg-amber-500 text-stone-950"
+                : "bg-[#1a1a1a] border border-[#2a2a2a] text-[#888] shadow-amber-500/5"
               }`}
           >
             {year}
@@ -309,8 +309,8 @@ export default function AnalyticsPage() {
                 onClick={() => setSelectedMonth(month)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors
                   ${selectedMonth === month
-                    ? "bg-amber-500 text-white"
-                    : "bg-[#1a1a1a] border border-[#2a2a2a] text-[#888] hover:text-[#e8e8e8]"
+                    ? "bg-amber-500 text-stone-950"
+                    : "bg-[#1a1a1a] border border-[#2a2a2a] text-[#888] shadow-amber-500/5"
                   }`}
               >
                 {getMonthName(month).slice(0, 3)}

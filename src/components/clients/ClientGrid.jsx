@@ -6,9 +6,14 @@ import { Users, Mail, Phone, MapPin } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import EmptyState from "@/components/ui/EmptyState";
 import ConfirmDialog from "@/components/ui/ConfirmDialog";
-import { getInitials, getClientStatus } from "@/lib/utils/formatters";
+import { getInitials } from "@/lib/utils/formatters";
 
-export default function ClientGrid({ clients = [], onEdit, onDelete, deleting }) {
+export default function ClientGrid({
+  clients = [],
+  onEdit,
+  onDelete,
+  deleting,
+}) {
   const router = useRouter();
   const [confirmId, setConfirmId] = useState(null);
 
@@ -31,9 +36,10 @@ export default function ClientGrid({ clients = [], onEdit, onDelete, deleting })
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {clients.map((client) => {
-          const status = getClientStatus(client.projects);
-          const isActive = status === "active";
-          
+          const isActive = client.status
+            ? String(client.status).trim().toLowerCase() === "active"
+            : false;
+
           return (
             <div
               key={client.id}
@@ -79,7 +85,10 @@ export default function ClientGrid({ clients = [], onEdit, onDelete, deleting })
                 )}
                 {client.address && (
                   <div className="flex items-center gap-2.5 text-xs text-stone-400">
-                    <MapPin size={13} className="text-stone-600 flex-shrink-0" />
+                    <MapPin
+                      size={13}
+                      className="text-stone-600 flex-shrink-0"
+                    />
                     <span className="truncate">{client.address}</span>
                   </div>
                 )}
