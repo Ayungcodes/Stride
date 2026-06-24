@@ -2,8 +2,6 @@
 
 A full-stack freelancer management dashboard built with Next.js and Supabase. Manage clients, projects, tasks, and track your earnings — all in one place.
 
-![FreelancerDesk Dashboard](https://knmvcfrdcooyzffvponx.supabase.co/storage/v1/object/public/assets/dashboard-preview.png)
-
 ---
 
 ## Features
